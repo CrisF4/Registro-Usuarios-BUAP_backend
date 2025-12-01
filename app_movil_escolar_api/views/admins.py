@@ -159,10 +159,10 @@ class TotalEventos(generics.CreateAPIView):
     #Contar el total de eventos academicos
     def get(self, request, *args, **kwargs):
         # TOTAL EVENTOS ACADEMICOS
-        eventos_qs = EventosAcademicos.objects.filter(user__is_active=True)
-        total_eventos = EventoAcademicoSerializer(eventos_qs, many=True).data
+        eventos_qs = EventosAcademicos.objects.all()
+        lista_eventos = EventoAcademicoSerializer(eventos_qs, many=True).data
         
-        for evento in total_eventos:
+        for evento in lista_eventos:
             try:
                 evento["publico_objetivo"] = json.loads(evento["publico_objetivo"])
             except Exception:

@@ -89,7 +89,6 @@ class EventoAcademicoView(generics.CreateAPIView):
         return Response(evento.errors, status=status.HTTP_400_BAD_REQUEST)
     
     # Actualizar datos del evento academico
-    # TODO: Preguntar si se pueden actualizar email y contraseña.
     @transaction.atomic
     def put(self, request, *args, **kwargs):
         permission_classes = (permissions.IsAuthenticated,)
