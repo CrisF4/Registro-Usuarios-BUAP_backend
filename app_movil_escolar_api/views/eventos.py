@@ -57,7 +57,8 @@ class EventoAcademicoView(generics.CreateAPIView):
             lugar = request.data['lugar']
             publico = json.dumps(request.data['publico_objetivo'])
             programa = request.data['programa_educativo']
-            responsable = request.data['responsable']
+            responsable_id = request.data['responsable'] # Recupera el ID del usuario responsable
+            responsable_user = get_object_or_404(User, id=responsable_id) # Obtiene el objeto User correspondiente
             descripcion = request.data['descripcion']
             cupo_maximo = request.data['cupo_maximo']
             #Valida si existe el evento o bien el nombre registrado
@@ -73,7 +74,7 @@ class EventoAcademicoView(generics.CreateAPIView):
                                         lugar = lugar,
                                         publico_objetivo = publico,
                                         programa_educativo = programa,
-                                        responsable = responsable,
+                                        responsable = responsable_user,
                                         descripcion = descripcion,
                                         cupo_maximo = cupo_maximo)
 
@@ -102,7 +103,9 @@ class EventoAcademicoView(generics.CreateAPIView):
         evento.lugar = request.data["lugar"]
         evento.publico_objetivo = json.dumps(request.data["publico_objetivo"])
         evento.programa_educativo = request.data["programa_educativo"]
-        evento.responsable = request.data["responsable"]
+        responsable_id = request.data["responsable"]
+        responsable_user = get_object_or_404(User, id=responsable_id)
+        evento.responsable = responsable_user
         evento.descripcion = request.data["descripcion"]
         evento.cupo_maximo = request.data["cupo_maximo"]
         evento.save()
