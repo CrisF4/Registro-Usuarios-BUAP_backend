@@ -1,13 +1,23 @@
 import os
+from pathlib import Path
+
+# Cargar variables de entorno desde .env si existe
+try:
+    from dotenv import load_dotenv
+    env_path = Path(__file__).resolve().parent.parent / '.env'
+    if env_path.exists():
+        load_dotenv(env_path)
+except ImportError:
+    pass  # python-dotenv no está instalado, usar variables del sistema
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Mantén la clave secreta en variables de entorno en producción
-SECRET_KEY = '-_&+lsebec(whhw!%n@ww&1j=4-^j_if9x8$q778+99oz&!ms2'
+SECRET_KEY = os.getenv('SECRET_KEY', '-_&+lsebec(whhw!%n@ww&1j=4-^j_if9x8$q778+99oz&!ms2')
 
-DEBUG = True  # en desarrollo
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,9 +44,10 @@ MIDDLEWARE = [
 ]
 
 # Configuración de CORS: define orígenes permitidos y quita CORS_ORIGIN_ALLOW_ALL
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',
-]
+CORS_ALLOWED_ORIGINS = os.getenv(
+    'CORS_ALLOWED_ORIGINS', 
+    'http://localhost:4200'
+).split(',')
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'app_movil_escolar_api.urls'
@@ -71,15 +82,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app_movil_escolar_api.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'read_default_file': os.path.join(BASE_DIR, "my.cnf"),
-            'charset': 'utf8mb4',
+# Configuración de base de datos: usa variables de entorno si están disponibles
+if os.getenv('DB_HOST'):
+    # Configuración para PythonAnywhere o producción con variables de entorno
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': os.getenv('DB_PORT', '3306'),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            }
         }
     }
-}
+else:
+    # Configuración para desarrollo local usando my.cnf
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
+                'read_default_file': os.path.join(BASE_DIR, "my.cnf"),
+                'charset': 'utf8mb4',
+            }
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
