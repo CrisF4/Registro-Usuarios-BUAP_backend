@@ -12,10 +12,12 @@ from app_movil_escolar_api.views import eventos
 
 # TODO: Si se agregaron al resto de tipos usuarios la funcionalidad de total eventos, agregar aqui su path
 urlpatterns = [
+    # Django Admin Panel
+    path('django-admin/', admin.site.urls),
     #Create Admin
-        path('admin/', admins.AdminView.as_view()),
+    path('admin/', admins.AdminView.as_view()),
     #Admin Data
-        path('lista-admins/', admins.AdminAll.as_view()),
+    path('lista-admins/', admins.AdminAll.as_view()),
     #Edit Admin
         #path('admins-edit/', admins.AdminsViewEdit.as_view())
     #Create Alumno
