@@ -36,6 +36,5 @@ class EventoAcademicoSerializer(serializers.ModelSerializer):
         model = EventosAcademicos
         fields = '__all__'
     
-    # TODO: Rectificar la funcionalidad de como obtener el nombre del responsable
     def get_responsable_nombre(self, obj):
         return f"{obj.responsable.first_name} {obj.responsable.last_name}"

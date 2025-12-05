@@ -152,9 +152,8 @@ class TotalUsers(generics.CreateAPIView):
             },
             status=200
         )
-
-# TODO: Rectificar si es necesario que todos los usuarios tengan esta funcionalidad       
-# Contar el total de eventos academicos (se deberia de agregar a los demas tipos de usuarios?)
+   
+# Contar el total de eventos academicos
 class TotalEventos(generics.CreateAPIView):
     #Contar el total de eventos academicos
     def get(self, request, *args, **kwargs):
